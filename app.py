@@ -16,7 +16,7 @@ creds = Credentials.from_service_account_info(service_account_info, scopes=scope
 client = gspread.authorize(creds)
 
 # Access your sheet by URL (safer than by name)
-sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1abcD3FgHiJklMnOPQRstuVWxyz1234567890/edit#gid=0").sheet1
+sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1yUHh1v77JFwi92kzw2d9RxQiuFWywJAH7ru4acCbACw/edit?gid=0#gid=0").sheet1
 
 # Streamlit form
 st.title("🪔 Geetajayanti Celebration - Nivedanam Form")
