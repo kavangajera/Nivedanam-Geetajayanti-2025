@@ -34,15 +34,15 @@ with st.form("bhavferi_form"):
     yuvakendra = st.selectbox("Yuvakendra", yuvakendra_options)
     
     # Sanchalak Name
-    sanchalak_name = st.text_input("Sanchalak Name")
+    sanchalak_name = st.text_input("સંચલક નું નામ")
     
     # Number of new yuvans
-    number_of_new_yuvans = st.number_input("Number of new yuvans", min_value=0, value=0, step=1)
+    number_of_new_yuvans = st.number_input("કેટલા યુવાનોને મળ્યા?", min_value=0, value=0, step=1)
     
     # Date of bhavferi (default to today's date in dd/mm/yyyy format)
-    date_of_bhavferi = st.date_input("Date of bhavferi", value=datetime.today())
+    date_of_bhavferi = st.date_input("ભાવફેરી ની તારીખ", value=datetime.today())
     
-    submitted = st.form_submit_button("Submit")
+    submitted = st.form_submit_button("નિવેદન મોકલો")
 
 if submitted:
     if sanchalak_name and yuvakendra != "Select Yuvakendra" and number_of_new_yuvans >= 0:
@@ -54,7 +54,7 @@ if submitted:
                 # Create a new worksheet for this Yuvakendra
                 sheet = spreadsheet.add_worksheet(title=yuvakendra, rows="100", cols="20")
                 # Add headers to the new sheet
-                sheet.append_row(["Sanchalak Name", "Number of new yuvans", "Date of bhavferi"])
+                sheet.append_row(["સંચલક નું નામ", "કેટલા યુવાનોને મળ્યા?", "ભાવફેરી ની તારીખ"])
             
             # Format date as dd/mm/yyyy
             formatted_date = date_of_bhavferi.strftime("%d/%m/%Y")
