@@ -16,8 +16,8 @@ service_account_info = st.secrets["google_service_account"]
 creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
 client = gspread.authorize(creds)
 
-# Access your sheet by URL (safer than by name)
-sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1yUHh1v77JFwi92kzw2d9RxQiuFWywJAH7ru4acCbACw/edit?gid=0#gid=0").sheet1
+# Access your spreadsheet by URL
+spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1yUHh1v77JFwi92kzw2d9RxQiuFWywJAH7ru4acCbACw/edit?gid=0#gid=0")
 
 # Streamlit form
 st.title("🪔 Geetajayanti Celebration - Bhavferi Entry Form")
@@ -46,11 +46,23 @@ with st.form("bhavferi_form"):
 
 if submitted:
     if sanchalak_name and yuvakendra != "Select Yuvakendra" and number_of_new_yuvans >= 0:
-        # Format date as dd/mm/yyyy
-        formatted_date = date_of_bhavferi.strftime("%d/%m/%Y")
-        
-        # Record the entry
-        sheet.append_row([yuvakendra, sanchalak_name, number_of_new_yuvans, formatted_date])
-        st.success("✅ Your Bhavferi entry has been recorded successfully!")
+        try:
+            # Try to access the sheet for the selected Yuvakendra, create if it doesn't exist
+            try:
+                sheet = spreadsheet.worksheet(yuvakendra)
+            except gspread.exceptions.WorksheetNotFound:
+                # Create a new worksheet for this Yuvakendra
+                sheet = spreadsheet.add_worksheet(title=yuvakendra, rows="100", cols="20")
+                # Add headers to the new sheet
+                sheet.append_row(["Sanchalak Name", "Number of new yuvans", "Date of bhavferi"])
+            
+            # Format date as dd/mm/yyyy
+            formatted_date = date_of_bhavferi.strftime("%d/%m/%Y")
+            
+            # Record the entry in the appropriate sheet
+            sheet.append_row([sanchalak_name, number_of_new_yuvans, formatted_date])
+            st.success(f"✅ Your Bhavferi entry has been recorded successfully in {yuvakendra} sheet!")
+        except Exception as e:
+            st.error(f"❌ An error occurred while saving the entry: {str(e)}")
     else:
         st.warning("⚠️ Please fill in all fields correctly.")
